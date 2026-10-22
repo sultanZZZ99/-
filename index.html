@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Встреча — планируйте без переписок</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink:#182026; --muted:#6c767d; --line:#e6e7e4; --paper:#fffefd; --mint:#d5f4e7; --green:#176b51; --orange:#ffad5b; --coral:#f16e5a; --blue:#dce8ff; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-width:320px; color:var(--ink); background:#f7f7f4; font-family:"DM Sans",Arial,sans-serif; }
+    button,input { font:inherit; }
+    button { cursor:pointer; }
+    .shell { width:min(1180px,calc(100% - 40px)); margin:auto; }
+    header { height:82px; display:flex; align-items:center; justify-content:space-between; }
+    .brand { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:700; letter-spacing:-.7px; }
+    .brand-mark { width:33px;height:33px;position:relative;border:2px solid var(--ink);border-radius:10px; transform:rotate(-5deg); }
+    .brand-mark:after {content:""; width:12px;height:12px;background:var(--orange);border-radius:50%;position:absolute;right:-5px;top:-5px;border:2px solid var(--ink);}
+    nav { display:flex; gap:30px; font-size:14px; color:#555e63; }
+    nav a { color:inherit;text-decoration:none; }
+    .login { background:none;border:0;font-size:14px;font-weight:600; }
+    .hero { padding:70px 0 92px; display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center; }
+    .eyebrow { display:inline-flex; gap:8px; align-items:center; color:var(--green); text-transform:uppercase; letter-spacing:1.3px; font-size:11px; font-weight:700; }
+    .eyebrow i { display:block;width:8px;height:8px;border-radius:50%;background:var(--orange); }
+    h1 { font-family:"Playfair Display",Georgia,serif; font-size:clamp(45px,5.3vw,74px); line-height:1.02; letter-spacing:-3px; font-weight:700; max-width:620px; margin:19px 0 23px; }
+    h1 em { font-style:normal; color:var(--green); position:relative; white-space:nowrap; }
+    h1 em:after {content:"";position:absolute;height:10px;bottom:-3px;left:0;right:0;background:var(--mint);z-index:-1;border-radius:10px;transform:rotate(-1.5deg);}
+    .lead { font-size:18px; line-height:1.55; color:var(--muted); max-width:480px; margin:0 0 30px; }
+    .start { padding:14px 20px; border:0; border-radius:10px; background:var(--ink); color:white; font-size:15px; font-weight:700; box-shadow:5px 5px 0 var(--orange); transition:transform .15s,box-shadow .15s; }
+    .start:hover { transform:translate(2px,2px);box-shadow:3px 3px 0 var(--orange); }
+    .note { margin:18px 0 0;font-size:12px;color:#899197; }
+    .planner { background:var(--paper); border:1px solid var(--line); box-shadow:10px 12px 0 #e7eee9; border-radius:16px; overflow:hidden; transform:rotate(1.2deg); }
+    .planner-head { padding:20px 24px 17px; display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line); }
+    .planner-head b { font-size:15px; } .close { color:#8f999e; font-size:22px;line-height:1; }
+    .form { padding:21px 24px 24px; }
+    label { display:block;font-size:12px;font-weight:700;margin-bottom:8px; }
+    .title-input { width:100%; border:1px solid var(--line);background:#fbfbfa;padding:12px;border-radius:8px;margin-bottom:18px;outline-color:var(--green); }
+    .fields { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px; }
+    .field { border:1px solid var(--line);border-radius:8px;padding:8px 11px; } .field span { color:#9ba2a5;font-size:10px;display:block;margin-bottom:3px; } .field input {width:100%;border:0;background:transparent;padding:0;font-size:12px;font-weight:700;outline:0;color:var(--ink);min-height:21px}.date-picker{display:flex;align-items:center;gap:6px}.date-picker input[type="date"]{min-width:0}.date-picker input[type="time"]{width:58px;border-left:1px solid var(--line);padding-left:6px}
+    .people { display:flex;align-items:center;gap:8px;margin-bottom:20px; }.avatars {display:flex;padding-left:4px}.avatar {width:26px;height:26px;border-radius:50%;margin-left:-4px;border:2px solid white;display:grid;place-items:center;font-size:9px;font-weight:700;color:#26413a}.a1{background:#ffcf9c}.a2{background:#c3e5d5}.a3{background:#d6ccf7}.a4{background:#bdddff}.people small {color:var(--muted);font-size:11px;}
+    .suggestion {background:var(--mint);border-radius:9px;padding:12px;display:flex;align-items:center;justify-content:space-between;}.suggestion div {font-size:11px;line-height:1.4}.suggestion b {display:block;font-size:12px}.suggestion button {border:0;background:var(--green);color:#fff;border-radius:6px;padding:7px 10px;font-size:11px;font-weight:700;}
+    .attendees {width:100%;border:1px solid var(--line);background:#fbfbfa;border-radius:8px;padding:10px 12px;margin-bottom:14px;outline-color:var(--green);font-size:12px}.form-actions{display:flex;gap:8px;margin-top:12px}.save{flex:1;border:0;background:var(--ink);color:#fff;border-radius:7px;padding:10px;font-size:12px;font-weight:700}.reset{border:0;background:transparent;color:#687278;font-size:11px}
+    .workspace { background:#fffefd; padding:74px 0 86px; }
+    .section-top {display:flex;align-items:end;justify-content:space-between;margin-bottom:32px}.section-top h2 {font-family:"Playfair Display",Georgia,serif;font-size:36px;letter-spacing:-1.5px;margin:0}.section-top p{color:var(--muted);font-size:14px;margin:0;}.viewall{border:0;border-bottom:1px solid var(--ink);padding:0 0 3px;background:none;font-size:13px;font-weight:700;}
+    .meeting-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.meeting{border:1px solid var(--line);border-radius:12px;padding:20px;min-height:205px;position:relative;overflow:hidden}.meeting.featured{background:#f0fbf6;border-color:#d6eee3}.meeting .date{font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.8px}.meeting h3{margin:13px 0 9px;font-size:20px;letter-spacing:-.7px}.meeting p{font-size:12px;color:var(--muted);line-height:1.5;margin:0;max-width:205px}.meeting .time{position:absolute;bottom:18px;left:20px;font-size:12px;font-weight:700}.meeting .dot{position:absolute;width:60px;height:60px;border-radius:50%;right:-15px;bottom:-12px;background:var(--orange)}.meeting.blue .dot{background:var(--blue)}.meeting.blue .date{color:#476da7}.meeting .mini-avatars{position:absolute;right:17px;top:17px;display:flex}.meeting .mini-avatars .avatar{width:22px;height:22px;font-size:7px}.card-actions{position:absolute;right:14px;bottom:13px;display:flex;gap:5px;z-index:1}.card-actions button{background:#fffefd;border:1px solid #dfe3df;border-radius:5px;padding:4px 7px;font-size:10px;color:#465057}.empty{grid-column:1/-1;border:1px dashed #ccd4cf;border-radius:12px;padding:28px;text-align:center;color:var(--muted);font-size:14px}
+    .how { padding:85px 0; }.how-grid{display:grid;grid-template-columns:310px 1fr;gap:80px;align-items:start}.how h2{font-family:"Playfair Display",Georgia,serif;font-size:43px;line-height:1.07;letter-spacing:-1.8px;margin:13px 0}.how p{color:var(--muted);line-height:1.55;font-size:14px}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:34px}.step-num{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:#fff;font-size:12px;font-weight:700;margin-bottom:17px}.step:nth-child(2) .step-num{background:var(--orange);color:var(--ink)}.step:nth-child(3) .step-num{background:var(--mint);color:var(--green)}.step h3{font-size:16px;margin:0 0 9px}.step p{font-size:13px;margin:0}
+    footer{border-top:1px solid var(--line);padding:26px 0;display:flex;align-items:center;justify-content:space-between;color:#788187;font-size:12px}.footer-logo{color:var(--ink);font-weight:700;font-size:16px}
+    .modal{position:fixed;inset:0;background:rgba(24,32,38,.38);z-index:10;padding:24px;display:none;overflow:auto}.modal.open{display:grid;place-items:center}.detail{width:min(900px,100%);background:#fffefd;border-radius:16px;box-shadow:0 18px 50px rgba(24,32,38,.2);padding:28px;position:relative}.modal-close{position:absolute;top:18px;right:20px;background:none;border:0;color:#6c767d;font-size:25px}.detail-head{padding-right:35px;border-bottom:1px solid var(--line);padding-bottom:19px;margin-bottom:22px}.detail-head p{margin:0 0 7px;color:var(--green);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px}.detail-head h2{margin:0;font-family:"Playfair Display",Georgia,serif;font-size:31px;letter-spacing:-1px}.detail-card{border:1px solid var(--line);border-radius:11px;padding:18px;margin-top:16px}.detail-card:first-child{margin-top:0}.detail-card h3{font-size:16px;margin:0 0 4px}.detail-card .hint{color:var(--muted);font-size:11px;margin:0 0 13px}.add-row{display:grid;grid-template-columns:1fr 100px 80px 92px 78px;gap:7px;margin-bottom:12px}.add-row input,.add-row select{border:1px solid var(--line);border-radius:6px;padding:8px;min-width:0;font-size:12px;background:#fff}.add-row button{border:0;border-radius:6px;background:var(--ink);color:#fff;font-size:11px;font-weight:700}.meeting-table{width:100%;border-collapse:collapse;font-size:13px}.meeting-table th{text-align:left;font-size:10px;letter-spacing:.6px;color:#879096;font-weight:700;padding:0 9px 9px;text-transform:uppercase}.meeting-table td{border-top:1px solid #edf0ed;padding:10px 9px}.meeting-table th:first-child,.meeting-table td:first-child{padding-left:0}.meeting-table th:last-child,.meeting-table td:last-child{padding-right:0;text-align:right}.meeting-table input[type="checkbox"]{accent-color:var(--green)}.table-total td{font-weight:700;border-top:1px solid #cdd8d1}.table-total b{font-size:17px;color:var(--green)}.category{display:inline-block;border-radius:100px;padding:4px 7px;font-size:10px;font-weight:700}.category.food{color:#98600e;background:#fff0d8}.category.alcohol{color:#7355a5;background:#eee7ff}.remove-item{border:0;background:none;color:#9aa1a5;font-size:16px}.idea{display:inline-block;border:1px solid #cfe8dc;background:#f2fbf6;color:var(--green);border-radius:100px;padding:6px 9px;font-size:11px;margin:10px 3px 0 0}
+    .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}.table-wrap:after{content:"↔ листайте таблицу";display:none;color:#879096;font-size:10px;padding-top:8px}
+    @media(max-width:780px){nav{display:none}.hero{grid-template-columns:1fr;gap:44px;padding:48px 0 64px}.planner{max-width:520px;justify-self:center;width:100%;transform:none}.meeting-grid,.steps,.detail-grid{grid-template-columns:1fr;gap:12px}.meeting{min-height:175px}.how-grid{grid-template-columns:1fr;gap:28px}.section-top{align-items:start;gap:12px}.section-top h2{font-size:30px}.workspace,.how{padding:55px 0}.lead{font-size:16px}h1{letter-spacing:-2px}.section-top p{display:none}.detail{padding:22px 17px}.detail-card.wide{grid-column:auto}}
+    @media(max-width:620px){.shell{width:min(100% - 28px,1180px)}header{height:68px}.brand{font-size:18px}.login{font-size:13px}.hero{padding:32px 0 48px;gap:30px}h1{font-size:45px;letter-spacing:-2.2px;max-width:100%;overflow-wrap:anywhere}h1 em{white-space:normal}.lead{font-size:15px}.start{width:100%;padding:15px}.planner-head,.form{padding-left:17px;padding-right:17px}.fields{grid-template-columns:1fr;gap:8px}.section-top{margin-bottom:20px}.viewall{font-size:12px;white-space:nowrap}.meeting{min-height:160px;padding:17px}.card-actions{right:11px;bottom:11px}.card-actions button{padding:5px 6px}.how,.workspace{padding:46px 0}.how h2{font-size:36px}.modal{padding:0;align-items:end!important}.detail{width:100%;max-height:94vh;border-radius:18px 18px 0 0;padding:21px 14px 28px}.detail-head{margin-bottom:16px;padding-bottom:15px}.detail-head h2{font-size:27px;line-height:1.05}.detail-card{padding:14px;margin-top:12px}.add-row{grid-template-columns:1fr 1fr;gap:8px}.add-row input,.add-row select{min-height:42px}.add-row button{min-height:42px;grid-column:1/-1}.meeting-table{min-width:630px}.table-wrap:after{display:block}footer{padding:20px 0;gap:12px;align-items:start;flex-direction:column}.note{line-height:1.4}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header><div class="brand"><span class="brand-mark"></span>встреча</div><nav><a href="#meetings">Мои встречи</a><a href="#how">Как это работает</a></nav><button class="login">Войти →</button></header>
+    <main>
+      <section class="hero">
+        <div><span class="eyebrow"><i></i> планируйте проще</span><h1>Собирайте людей,<br>а не <em>переписки.</em></h1><p class="lead">Найдите время, которое подходит всем, и создайте встречу за пару минут.</p><button class="start" id="create">Создать встречу&nbsp; ↗</button><p class="note">Бесплатно для команд до 10 человек</p></div>
+        <aside class="planner" aria-label="Форма создания встречи"><div class="planner-head"><b id="form-heading">Новая встреча</b><span class="close">×</span></div><div class="form"><label for="event">О чём поговорим?</label><input class="title-input" id="event" value="Обсуждение запуска" /><div class="fields"><div class="field"><span>ДАТА И ВРЕМЯ</span><div class="date-picker"><input id="date" type="date" aria-label="Дата встречи" /><input id="time" type="time" value="15:30" aria-label="Время встречи" /></div></div><div class="field"><span>ДЛИТЕЛЬНОСТЬ</span><input id="duration" value="45 минут" /></div></div><label for="attendees">Участники</label><input class="attendees" id="attendees" value="Анна, Марат, Диана" /><div class="suggestion"><div><b>Лучшее время для всех</b>Четверг, 15:30 — 16:15</div><button id="confirm" type="button">Выбрать</button></div><div class="form-actions"><button class="save" id="save" type="button">Добавить в расписание</button><button class="reset" id="reset" type="button">Очистить</button></div></div></aside>
+      </section>
+    </main>
+  </div>
+  <section class="workspace" id="meetings"><div class="shell"><div class="section-top"><div><p>ВАШЕ РАСПИСАНИЕ</p><h2>Ближайшие встречи</h2></div><button class="viewall" id="new-meeting">+ Новая встреча</button></div><div class="meeting-grid" id="meeting-list"></div></div></section>
+  <section class="how" id="how"><div class="shell how-grid"><div><span class="eyebrow"><i></i> без лишнего</span><h2>Время для важного.</h2><p>Встреча берёт согласование времени на себя — вам остаётся разговор.</p></div><div class="steps"><div class="step"><div class="step-num">1</div><h3>Создайте событие</h3><p>Укажите тему, длительность и несколько удобных вариантов.</p></div><div class="step"><div class="step-num">2</div><h3>Пригласите коллег</h3><p>Отправьте одну ссылку — без регистраций и путаницы в чатах.</p></div><div class="step"><div class="step-num">3</div><h3>Выберите время</h3><p>Мы покажем пересечение календарей и напомним всем заранее.</p></div></div></div></section>
+  <div class="modal" id="detail-modal" role="dialog" aria-modal="true" aria-labelledby="detail-title"><section class="detail"><button class="modal-close" id="modal-close" aria-label="Закрыть">×</button><div class="detail-head"><p id="detail-date"></p><h2 id="detail-title">Встреча</h2></div><div class="detail-card"><h3>Покупки и бюджет</h3><p class="hint">Выберите категорию: еда или алкоголь. Итог считается автоматически.</p><div class="add-row"><input id="item-name" placeholder="Название товара"><select id="item-category" aria-label="Категория"><option value="Еда">Еда</option><option value="Алкоголь">Алкоголь</option></select><input id="item-amount" type="number" min="1" value="1" placeholder="Кол-во"><input id="calc-price" type="number" min="0" placeholder="Цена, ₸"><button id="item-add" type="button">Добавить</button></div><div class="table-wrap"><table class="meeting-table"><thead><tr><th>Куплено</th><th>Товар</th><th>Раздел</th><th>Кол-во</th><th>Цена</th><th>Сумма</th><th></th></tr></thead><tbody id="shopping-list"></tbody><tfoot><tr class="table-total"><td colspan="5">Итого</td><td id="budget-total">0 ₸</td><td></td></tr></tfoot></table></div></div><div class="detail-card"><h3>План вечера</h3><p class="hint">Добавляйте активности и время.</p><div class="add-row"><input id="plan-name" placeholder="Например, настольные игры"><input id="plan-time" placeholder="19:30"><span></span><button id="plan-add" type="button">Добавить</button></div><div class="table-wrap"><table class="meeting-table"><thead><tr><th>Время</th><th>Активность</th><th></th></tr></thead><tbody id="plan-list"></tbody></table></div><div><span class="idea">Ужин</span><span class="idea">Квиз</span><span class="idea">Прогулка</span><span class="idea">Кино</span></div></div></section></div>
+  <div class="shell"><footer><span class="footer-logo">встреча</span><span>Планируйте время бережно · 2026</span></footer></div>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const fields = ['event', 'date', 'time', 'duration', 'attendees'];
+    const defaultMeetings = [
+      { id: 1, title: 'Еженедельный синк', date: 'Сегодня · 14:00', duration: '45 минут', attendees: 'Команда продукта · 6 участников', style: 'featured' },
+      { id: 2, title: 'Демо для клиента', date: 'Завтра · 11:30', duration: '30 минут', attendees: 'Подготовить сценарий и материалы', style: 'blue' },
+      { id: 3, title: 'Ретроспектива', date: 'Пятница · 16:00', duration: '1 час', attendees: 'Обсудим итоги недели и следующие шаги', style: '' }
+    ];
+    let meetings = JSON.parse(localStorage.getItem('vstrecha-meetings') || 'null') || defaultMeetings;
+    let editingId = null;
+    const escapeHtml = (text) => String(text).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[c]));
+    function initials(text) { return text.split(',').map(x => x.trim()[0]).filter(Boolean).slice(0, 3); }
+    function render() {
+      const list = $('meeting-list');
+      if (!meetings.length) { list.innerHTML = '<div class="empty">В расписании пока нет встреч. Создайте первую выше.</div>'; return; }
+      list.innerHTML = meetings.map((m, i) => `<article class="meeting ${m.style || ''}"><span class="date">${escapeHtml(m.date)}</span><div class="mini-avatars">${initials(m.attendees).map((x, n) => `<span class="avatar a${n + 1}">${escapeHtml(x)}</span>`).join('')}</div><h3>${escapeHtml(m.title)}</h3><p>${escapeHtml(m.attendees)}</p><span class="time">${escapeHtml(m.duration)}</span><div class="card-actions"><button data-open="${m.id}">Открыть</button><button data-edit="${m.id}">Изменить</button><button data-delete="${m.id}">Удалить</button></div><span class="dot"></span></article>`).join('');
+    }
+    function saveStorage() { localStorage.setItem('vstrecha-meetings', JSON.stringify(meetings)); render(); }
+    function clearForm() { fields.forEach(id => $(id).value = ''); $('time').value = '15:30'; editingId = null; $('form-heading').textContent = 'Новая встреча'; $('save').textContent = 'Добавить в расписание'; }
+    function focusForm() { document.querySelector('.planner').scrollIntoView({behavior:'smooth', block:'center'}); $('event').focus(); }
+    $('create').addEventListener('click', focusForm);
+    $('new-meeting').addEventListener('click', () => { clearForm(); focusForm(); });
+    $('confirm').addEventListener('click', (e) => { $('date').value = new Date().toISOString().slice(0, 10); $('time').value = '15:30'; e.target.textContent = 'Выбрано ✓'; });
+    $('reset').addEventListener('click', clearForm);
+    $('save').addEventListener('click', () => {
+      const title = $('event').value.trim();
+      if (!title) { $('event').focus(); return; }
+      const rawDate = $('date').value;
+      const readableDate = rawDate ? new Intl.DateTimeFormat('ru-RU', {day:'numeric', month:'long'}).format(new Date(rawDate + 'T00:00:00')) : 'Дата не указана';
+      const data = { title, date: rawDate ? `${readableDate} · ${$('time').value || 'время не указано'}` : readableDate, dateValue: rawDate, timeValue: $('time').value, duration: $('duration').value.trim() || 'Длительность не указана', attendees: $('attendees').value.trim() || 'Участники не указаны' };
+      if (editingId) meetings = meetings.map(m => m.id === editingId ? {...m, ...data} : m);
+      else meetings.unshift({id: Date.now(), ...data, style: meetings.length % 2 ? 'blue' : 'featured'});
+      saveStorage(); clearForm(); $('meetings').scrollIntoView({behavior:'smooth'});
+    });
+    let activeMeetingId = null;
+    const detailKey = 'vstrecha-details';
+    let details = JSON.parse(localStorage.getItem(detailKey) || '{}');
+    const persistDetails = () => localStorage.setItem(detailKey, JSON.stringify(details));
+    const currentDetail = () => details[activeMeetingId] || (details[activeMeetingId] = { items: [], plan: [] });
+    const money = (n) => new Intl.NumberFormat('ru-RU').format(n) + ' ₸';
+    function renderDetail() {
+      const data = currentDetail();
+      $('shopping-list').innerHTML = data.items.map((x, i) => { const category = x.category || 'Еда'; const categoryClass = category === 'Алкоголь' ? 'alcohol' : 'food'; return `<tr><td><input data-item-check="${i}" type="checkbox" ${x.done ? 'checked' : ''}></td><td>${escapeHtml(x.name)}</td><td><span class="category ${categoryClass}">${escapeHtml(category)}</span></td><td>${escapeHtml(x.amount || '—')}</td><td>${money(x.price || 0)}</td><td>${money((x.price || 0) * (Number(x.amount) || 1))}</td><td><button class="remove-item" data-item-remove="${i}">×</button></td></tr>`; }).join('') || '<tr><td colspan="7" style="color:#899197;text-align:center">Добавьте первый товар</td></tr>';
+      $('budget-total').textContent = money(data.items.reduce((sum, x) => sum + (x.price || 0) * (Number(x.amount) || 1), 0));
+      $('plan-list').innerHTML = data.plan.map((x, i) => `<tr><td>${escapeHtml(x.time || '—')}</td><td>${escapeHtml(x.name)}</td><td><button class="remove-item" data-plan-remove="${i}">×</button></td></tr>`).join('') || '<tr><td colspan="3" style="color:#899197;text-align:center">Добавьте активность</td></tr>';
+    }
+    function openDetail(id) {
+      const meeting = meetings.find(m => m.id === id); if (!meeting) return;
+      activeMeetingId = id; $('detail-title').textContent = meeting.title; $('detail-date').textContent = meeting.date;
+      $('detail-modal').classList.add('open'); renderDetail();
+    }
+    function closeDetail() { $('detail-modal').classList.remove('open'); activeMeetingId = null; }
+    $('modal-close').addEventListener('click', closeDetail);
+    $('detail-modal').addEventListener('click', (e) => { if (e.target === $('detail-modal')) closeDetail(); });
+    $('item-add').addEventListener('click', () => { const name = $('item-name').value.trim(); if (!name) return; currentDetail().items.push({name, category: $('item-category').value, amount: $('item-amount').value.trim(), price: Number($('calc-price').value) || 0, done: false}); $('item-name').value = ''; $('item-amount').value = 1; $('calc-price').value = ''; persistDetails(); renderDetail(); });
+    $('plan-add').addEventListener('click', () => { const name = $('plan-name').value.trim(); if (!name) return; currentDetail().plan.push({name, time: $('plan-time').value.trim()}); $('plan-name').value = ''; $('plan-time').value = ''; persistDetails(); renderDetail(); });
+    $('detail-modal').addEventListener('click', (e) => { const action = e.target.dataset; if (action.itemRemove === undefined && action.planRemove === undefined && action.itemCheck === undefined) return; const data = currentDetail(); if (action.itemRemove !== undefined) data.items.splice(Number(action.itemRemove), 1); if (action.planRemove !== undefined) data.plan.splice(Number(action.planRemove), 1); if (action.itemCheck !== undefined) data.items[Number(action.itemCheck)].done = e.target.checked; persistDetails(); renderDetail(); });
+    $('meeting-list').addEventListener('click', (e) => {
+      const id = Number(e.target.dataset.open || e.target.dataset.edit || e.target.dataset.delete); if (!id) return;
+      if (e.target.dataset.open) { openDetail(id); return; }
+      if (e.target.dataset.delete) { meetings = meetings.filter(m => m.id !== id); saveStorage(); return; }
+      const meeting = meetings.find(m => m.id === id); editingId = id;
+      $('event').value = meeting.title; $('date').value = meeting.dateValue || ''; $('time').value = meeting.timeValue || ''; $('duration').value = meeting.duration; $('attendees').value = meeting.attendees;
+      $('form-heading').textContent = 'Редактировать встречу'; $('save').textContent = 'Сохранить изменения'; focusForm();
+    });
+    if (!$('date').value) $('date').value = new Date().toISOString().slice(0, 10);
+    render();
+  </script>
+</body>
+</html>
