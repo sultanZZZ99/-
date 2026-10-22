@@ -140,7 +140,7 @@
     .from('shared_state')
     .upsert({
       id: 'meetings',
-      data: { meetings },
+      data: { meetings, details },
       updated_at: new Date().toISOString()
     });
 
@@ -167,7 +167,10 @@
     let activeMeetingId = null;
     const detailKey = 'vstrecha-details';
     let details = JSON.parse(localStorage.getItem(detailKey) || '{}');
-    const persistDetails = () => localStorage.setItem(detailKey, JSON.stringify(details));
+    const persistDetails = () => {
+  localStorage.setItem(detailKey, JSON.stringify(details));
+  saveStorage();
+};
     const currentDetail = () => details[activeMeetingId] || (details[activeMeetingId] = { items: [], plan: [] });
     const money = (n) => new Intl.NumberFormat('ru-RU').format(n) + ' ₸';
     function renderDetail() {
@@ -211,7 +214,15 @@
 
   if (Array.isArray(data?.data?.meetings)) {
     meetings = data.data.meetings;
+
+    if (data.data.details && Object.keys(data.data.details).length > 0) {
+      details = data.data.details;
+    } else if (Object.keys(details).length > 0) {
+      await saveStorage();
+    }
+
     localStorage.setItem('vstrecha-meetings', JSON.stringify(meetings));
+    localStorage.setItem(detailKey, JSON.stringify(details));
     render();
   } else {
     await saveStorage();
