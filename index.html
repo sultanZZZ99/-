@@ -51,6 +51,49 @@
     .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}.table-wrap:after{content:"↔ листайте таблицу";display:none;color:#879096;font-size:10px;padding-top:8px}
     @media(max-width:780px){nav{display:none}.hero{grid-template-columns:1fr;gap:44px;padding:48px 0 64px}.planner{max-width:520px;justify-self:center;width:100%;transform:none}.meeting-grid,.steps,.detail-grid{grid-template-columns:1fr;gap:12px}.meeting{min-height:175px}.how-grid{grid-template-columns:1fr;gap:28px}.section-top{align-items:start;gap:12px}.section-top h2{font-size:30px}.workspace,.how{padding:55px 0}.lead{font-size:16px}h1{letter-spacing:-2px}.section-top p{display:none}.detail{padding:22px 17px}.detail-card.wide{grid-column:auto}}
     @media(max-width:620px){.shell{width:min(100% - 28px,1180px)}header{height:68px}.brand{font-size:18px}.login{font-size:13px}.hero{padding:32px 0 48px;gap:30px}h1{font-size:45px;letter-spacing:-2.2px;max-width:100%;overflow-wrap:anywhere}h1 em{white-space:normal}.lead{font-size:15px}.start{width:100%;padding:15px}.planner-head,.form{padding-left:17px;padding-right:17px}.fields{grid-template-columns:1fr;gap:8px}.section-top{margin-bottom:20px}.viewall{font-size:12px;white-space:nowrap}.meeting{min-height:160px;padding:17px}.card-actions{right:11px;bottom:11px}.card-actions button{padding:5px 6px}.how,.workspace{padding:46px 0}.how h2{font-size:36px}.modal{padding:0;align-items:end!important}.detail{width:100%;max-height:94vh;border-radius:18px 18px 0 0;padding:21px 14px 28px}.detail-head{margin-bottom:16px;padding-bottom:15px}.detail-head h2{font-size:27px;line-height:1.05}.detail-card{padding:14px;margin-top:12px}.add-row{grid-template-columns:1fr 1fr;gap:8px}.add-row input,.add-row select{min-height:42px}.add-row button{min-height:42px;grid-column:1/-1}.meeting-table{min-width:630px}.table-wrap:after{display:block}footer{padding:20px 0;gap:12px;align-items:start;flex-direction:column}.note{line-height:1.4}}
+  @media (max-width: 620px) {
+  .modal.open {
+    display: flex;
+    align-items: flex-end !important;
+    justify-content: center;
+  }
+
+  .detail {
+    width: 100%;
+    max-width: 100vw;
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  .detail-card,
+  .add-row,
+  .table-wrap {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .add-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .add-row > * {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .add-row button {
+    grid-column: 1;
+  }
+
+  .add-row span {
+    display: none;
+  }
+
+  .table-wrap {
+    width: 100%;
+    overflow-x: auto;
+  }
+}
   </style>
 </head>
 <body>
