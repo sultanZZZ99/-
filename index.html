@@ -67,7 +67,12 @@
   <section class="how" id="how"><div class="shell how-grid"><div><span class="eyebrow"><i></i> без лишнего</span><h2>Время для важного.</h2><p>Встреча берёт согласование времени на себя — вам остаётся разговор.</p></div><div class="steps"><div class="step"><div class="step-num">1</div><h3>Создайте событие</h3><p>Укажите тему, длительность и несколько удобных вариантов.</p></div><div class="step"><div class="step-num">2</div><h3>Пригласите коллег</h3><p>Отправьте одну ссылку — без регистраций и путаницы в чатах.</p></div><div class="step"><div class="step-num">3</div><h3>Выберите время</h3><p>Мы покажем пересечение календарей и напомним всем заранее.</p></div></div></div></section>
   <div class="modal" id="detail-modal" role="dialog" aria-modal="true" aria-labelledby="detail-title"><section class="detail"><button class="modal-close" id="modal-close" aria-label="Закрыть">×</button><div class="detail-head"><p id="detail-date"></p><h2 id="detail-title">Встреча</h2></div><div class="detail-card"><h3>Покупки и бюджет</h3><p class="hint">Выберите категорию: еда или алкоголь. Итог считается автоматически.</p><div class="add-row"><input id="item-name" placeholder="Название товара"><select id="item-category" aria-label="Категория"><option value="Еда">Еда</option><option value="Алкоголь">Алкоголь</option></select><input id="item-amount" type="number" min="1" value="1" placeholder="Кол-во"><input id="calc-price" type="number" min="0" placeholder="Цена, ₸"><button id="item-add" type="button">Добавить</button></div><div class="table-wrap"><table class="meeting-table"><thead><tr><th>Куплено</th><th>Товар</th><th>Раздел</th><th>Кол-во</th><th>Цена</th><th>Сумма</th><th></th></tr></thead><tbody id="shopping-list"></tbody><tfoot><tr class="table-total"><td colspan="5">Итого</td><td id="budget-total">0 ₸</td><td></td></tr></tfoot></table></div></div><div class="detail-card"><h3>План вечера</h3><p class="hint">Добавляйте активности и время.</p><div class="add-row"><input id="plan-name" placeholder="Например, настольные игры"><input id="plan-time" placeholder="19:30"><span></span><button id="plan-add" type="button">Добавить</button></div><div class="table-wrap"><table class="meeting-table"><thead><tr><th>Время</th><th>Активность</th><th></th></tr></thead><tbody id="plan-list"></tbody></table></div><div><span class="idea">Ужин</span><span class="idea">Квиз</span><span class="idea">Прогулка</span><span class="idea">Кино</span></div></div></section></div>
   <div class="shell"><footer><span class="footer-logo">встреча</span><span>Планируйте время бережно · 2026</span></footer></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    const supabaseClient = window.supabase.createClient(
+  'https://swtkrsnoyvxcsoyxmuqd.supabase.co',
+  'sb_publishable_wrvQb-gjmHuhXjIIa2Y6XQ_FMCCTvBY'
+);
     const $ = (id) => document.getElementById(id);
     const fields = ['event', 'date', 'time', 'duration', 'attendees'];
     const defaultMeetings = [
@@ -84,7 +89,22 @@
       if (!meetings.length) { list.innerHTML = '<div class="empty">В расписании пока нет встреч. Создайте первую выше.</div>'; return; }
       list.innerHTML = meetings.map((m, i) => `<article class="meeting ${m.style || ''}"><span class="date">${escapeHtml(m.date)}</span><div class="mini-avatars">${initials(m.attendees).map((x, n) => `<span class="avatar a${n + 1}">${escapeHtml(x)}</span>`).join('')}</div><h3>${escapeHtml(m.title)}</h3><p>${escapeHtml(m.attendees)}</p><span class="time">${escapeHtml(m.duration)}</span><div class="card-actions"><button data-open="${m.id}">Открыть</button><button data-edit="${m.id}">Изменить</button><button data-delete="${m.id}">Удалить</button></div><span class="dot"></span></article>`).join('');
     }
-    function saveStorage() { localStorage.setItem('vstrecha-meetings', JSON.stringify(meetings)); render(); }
+    async function saveStorage() {
+  localStorage.setItem('vstrecha-meetings', JSON.stringify(meetings));
+  render();
+
+  const { error } = await supabaseClient
+    .from('shared_state')
+    .upsert({
+      id: 'meetings',
+      data: { meetings },
+      updated_at: new Date().toISOString()
+    });
+
+  if (error) {
+    console.error(error);
+    alert('Не удалось сохранить изменения. Проверьте подключение к базе.');
+  }}
     function clearForm() { fields.forEach(id => $(id).value = ''); $('time').value = '15:30'; editingId = null; $('form-heading').textContent = 'Новая встреча'; $('save').textContent = 'Добавить в расписание'; }
     function focusForm() { document.querySelector('.planner').scrollIntoView({behavior:'smooth', block:'center'}); $('event').focus(); }
     $('create').addEventListener('click', focusForm);
@@ -134,6 +154,49 @@
     });
     if (!$('date').value) $('date').value = new Date().toISOString().slice(0, 10);
     render();
+    async function loadSharedMeetings() {
+  const { data, error } = await supabaseClient
+    .from('shared_state')
+    .select('data')
+    .eq('id', 'meetings')
+    .maybeSingle();
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  if (Array.isArray(data?.data?.meetings)) {
+    meetings = data.data.meetings;
+    localStorage.setItem('vstrecha-meetings', JSON.stringify(meetings));
+    render();
+  } else {
+    await saveStorage();
+  }
+}
+
+supabaseClient
+  .channel('shared-meetings')
+  .on(
+    'postgres_changes',
+    {
+      event: '*',
+      schema: 'public',
+      table: 'shared_state',
+      filter: 'id=eq.meetings'
+    },
+    (payload) => {
+      const updated = payload.new?.data?.meetings;
+      if (Array.isArray(updated)) {
+        meetings = updated;
+        localStorage.setItem('vstrecha-meetings', JSON.stringify(meetings));
+        render();
+      }
+    }
+  )
+  .subscribe();
+
+loadSharedMeetings();
   </script>
 </body>
 </html>
